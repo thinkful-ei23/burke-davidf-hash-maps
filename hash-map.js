@@ -1,7 +1,7 @@
 'use strict';
 
 class HashMap {
-  constructor(initialCapacity=8) {
+  constructor(initialCapacity = 8) {
     this.length = 0;
     this._slots = [];
     this._capacity = initialCapacity;
@@ -10,9 +10,9 @@ class HashMap {
 
   static _hashString(string) {
     let hash = 5381;
-    for (let i=0; i<string.length; i++) {
+    for (let i = 0; i < string.length; i++) {
       hash = (hash << 5) + hash + string.charCodeAt(i);
-      hash = hash & hash; // keep it to 32 bits 
+      hash = hash & hash; // keep it to 32 bits
     }
     return hash >>> 0; // make sure it's positive
   }
@@ -27,7 +27,8 @@ class HashMap {
 
   set(key, value) {
     const loadRatio = (this.length + 1 + this._deleted) / this._capacity; // will the new value put us over our load ratio?
-    if (loadRatio > HashMap.MAX_LOAD_RATIO) { // if so, resize the capacity times 3
+    if (loadRatio > HashMap.MAX_LOAD_RATIO) {
+      // if so, resize the capacity times 3
       this._resize(this._capacity * HashMap.SIZE_RATIO);
     }
     // then find a slot for the key
@@ -52,13 +53,14 @@ class HashMap {
   }
 
   _findSlot(key) {
-    const hash = HashMap._hashString(key); 
+    const hash = HashMap._hashString(key);
     const start = hash % this._capacity; // let's say this gives us 3
 
-    for (let i=start; i<start + this._capacity; i++) { // this goes through the whole array we iterate through 3 to 13
-      const index = i % this._capacity; // if starting at 3. it goes through 3 through 10 and then 0, 1, 2 
+    for (let i = start; i < start + this._capacity; i++) {
+      // this goes through the whole array we iterate through 3 to 13
+      const index = i % this._capacity; // if starting at 3. it goes through 3 through 10 and then 0, 1, 2
       const slot = this._slots[index]; // checks whether it's empty or it matches what we're looking for (used for set and find)
-      if (slot === undefined || slot.key === key && !slot.deleted) {
+      if (slot === undefined || (slot.key === key && !slot.deleted)) {
         return index;
       }
     }
@@ -92,10 +94,43 @@ function main() {
   // lor.set('LadyofLight', 'Galadriel');
   // lor.set('HalfElven', 'Arwen');
   // lor.set('Ent', 'Treebeard');
-  console.log(JSON.stringify(lor, null, 2));
-  console.log(lor.get('Maiar'));
-  console.log(lor._slots);
+  // console.log(JSON.stringify(lor, null, 2));
+  // console.log(lor.get('Maiar'));
+  // console.log(lor._slots);
   //{HalfElven: "Arwen"}, {Ent: "Treebeard"}
+  console.log(checkPalindrome('north'));
+}
+
+function checkPalindrome(string) {
+  let palindrome = new HashMap(10);
+  let count = 0;
+  for (let i = 0; i < string.length; i++) {
+    try {
+      let charCount = palindrome.get(string[i]);
+      charCount++;
+      if (charCount % 2 === 0) {
+        count--;
+      } else {
+        count++;
+      }
+      palindrome.set(string[i], charCount);
+    } catch {
+      palindrome.set(string[i], 1);
+      count++;
+    }
+  }
+  if (
+    (string.length % 2 === 0 && count === 0) ||
+    (string.length % 2 === 1 && count === 1)
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+
+  //Cycle through characters adding 1 to count then removing 1 when a paired letter is found.
+
+  //returns boolean
 }
 
 main();
