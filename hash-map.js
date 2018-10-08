@@ -98,9 +98,8 @@ function main() {
   // console.log(lor.get('Maiar'));
   // console.log(lor._slots);
   //{HalfElven: "Arwen"}, {Ent: "Treebeard"}
-  console.log(checkPalindromeV2('doood'));
+  console.log(anagramGroup(['east', 'cars', 'acre', 'arcs', 'teas', 'eats', 'race']));
 }
-// nnonn
 
 function checkPalindrome(string) {
   let palindrome = new HashMap(10);
@@ -128,12 +127,9 @@ function checkPalindrome(string) {
   } else {
     return false;
   }
-
-  //Cycle through characters adding 1 to count then removing 1 when a paired letter is found.
-
-  //returns boolean
 }
 
+// doesn't work
 function checkPalindromeV2(string) {
   const even = string.length % 2 === 0;
   let palindrome = new HashMap(10);
@@ -154,11 +150,39 @@ function checkPalindromeV2(string) {
     (palindrome.length % 2 === 0 && even) ||
     (palindrome.length % 2 === 1 && !even)
   ) {
+    console.log(palindrome);
     return true;
   } else {
     return false;
   }
 }
+
+function anagramGroup (arrayOfWords) {
+  const hashMap = new HashMap();
+  const newArray = [];
+  for (let i = 0; i < arrayOfWords.length; i++) {
+    let currentWord = arrayOfWords[i];
+    let sortedWord = arrayOfWords[i].split('').sort().join('');
+    try {
+      hashMap.get(sortedWord).push(currentWord);
+    } catch(err) {
+      hashMap.set(sortedWord, [currentWord]);
+    }
+  }
+
+  for (let i = 0; i < hashMap._slots.length; i++) {
+    if (hashMap._slots[i] !== undefined) {
+      newArray.push(hashMap._slots[i].value);
+    }
+  }
+
+  return newArray;
+
+}
+
+
+//Write an algorithm to group a list of words into anagrams. For example, if the input was ['east', '
+//cars', 'acre', 'arcs', 'teas', 'eats', 'race'], the output should be: [['east', 'teas', 'eats'], ['cars', 'arcs'], ['acre', 'race']].
 
 main();
 
