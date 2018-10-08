@@ -80,5 +80,25 @@ class HashMap {
   }
 }
 
+function main() {
+  const lor = new HashMap(12);
+  // lor.set('Hobbit', 'Bilbo');
+  // lor.set('Hobbit', 'Frodo');
+  // lor.set('Wizard', 'Gandolf');
+  // lor.set('Human', 'Aragorn');
+  lor.set('Maiar', 'Necromancer');
+  lor.set('Maiar', 'Sauron');
+  // lor.set('Ringbearer', 'Gollum');
+  // lor.set('LadyofLight', 'Galadriel');
+  // lor.set('HalfElven', 'Arwen');
+  // lor.set('Ent', 'Treebeard');
+  console.log(JSON.stringify(lor, null, 2));
+  console.log(lor.get('Maiar'));
+  console.log(lor._slots);
+  //{HalfElven: "Arwen"}, {Ent: "Treebeard"}
+}
+
+main();
+
 HashMap.MAX_LOAD_RATIO = 0.9;
 HashMap.SIZE_RATIO = 3;
