@@ -268,7 +268,13 @@ class HashMap {
 
     for (const slot of oldSlots) {
       if (slot !== undefined) {
-        this.set(slot); // this process adds the length back
+        let currentNode = slot.head;
+        let previousNode = slot.head;
+        while (currentNode !== null) {
+          previousNode = currentNode;
+          this.set(previousNode.value.key, previousNode.value.value);
+          currentNode = currentNode.next;
+        }
       }
     }
   }
