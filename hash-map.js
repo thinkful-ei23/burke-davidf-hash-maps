@@ -98,25 +98,26 @@ function main() {
   // console.log(lor.get('Maiar'));
   // console.log(lor._slots);
   //{HalfElven: "Arwen"}, {Ent: "Treebeard"}
-  console.log(checkPalindrome('north'));
+  console.log(checkPalindromeV2('doood'));
 }
+// nnonn
 
 function checkPalindrome(string) {
   let palindrome = new HashMap(10);
   let count = 0;
   for (let i = 0; i < string.length; i++) {
     try {
-      let charCount = palindrome.get(string[i]);
-      charCount++;
+      let charCount = palindrome.get(string[i]); // try to grab the value from the hash map
+      charCount++; // keeping track of the character count
       if (charCount % 2 === 0) {
         count--;
       } else {
         count++;
       }
       palindrome.set(string[i], charCount);
-    } catch {
+    } catch(err) { 
       palindrome.set(string[i], 1);
-      count++;
+      count++; 
     }
   }
   if (
@@ -131,6 +132,32 @@ function checkPalindrome(string) {
   //Cycle through characters adding 1 to count then removing 1 when a paired letter is found.
 
   //returns boolean
+}
+
+function checkPalindromeV2(string) {
+  const even = string.length % 2 === 0;
+  let palindrome = new HashMap(10);
+  for (let i = 0; i < string.length; i++) {
+    try {
+      let charCount = palindrome.get(string[i]); // try to grab the value from the hash map
+      charCount++; // keeping track of the character count
+      if (charCount % 2 === 0) {
+        palindrome.remove(string[i]);
+      } else {
+        palindrome.set(string[i], charCount);
+      }
+    } catch(err) { 
+      palindrome.set(string[i], 1);
+    }
+  }
+  if (
+    (palindrome.length % 2 === 0 && even) ||
+    (palindrome.length % 2 === 1 && !even)
+  ) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 main();
