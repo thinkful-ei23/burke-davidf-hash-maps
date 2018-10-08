@@ -173,7 +173,6 @@ class HashMap {
     this.length = 0;
     this._slots = [];
     this._capacity = initialCapacity;
-    this._deleted = 0;
   }
 
   static _hashString(string) {
@@ -205,9 +204,8 @@ class HashMap {
   }
 
   set(key, value) {
-    const loadRatio = (this.length + 1 + this._deleted) / this._capacity; // will the new value put us over our load ratio?
+    const loadRatio = (this.length + 1) / this._capacity; // will the new value put us over our load ratio?
     if (loadRatio > HashMap.MAX_LOAD_RATIO) {
-      // if so, resize the capacity times 3
       this._resize(this._capacity * HashMap.SIZE_RATIO);
     }
     // then find a slot for the key
@@ -233,7 +231,6 @@ class HashMap {
   }
 
   remove(key) {
-    console.log('in remove');
     const index = this._findSlot(key);
     const slot = this._slots[index];
     if (slot === undefined) {
@@ -247,7 +244,6 @@ class HashMap {
 
     while (currentNode.next !== null) {
       if (currentNode.value.key === key) {
-        console.log('deleting');
         this._slots[index].deleteItem(currentNode.value);
       }
       currentNode = currentNode.next;
@@ -271,14 +267,18 @@ class HashMap {
     this._deleted = 0;
 
     for (const slot of oldSlots) {
-      if (slot !== undefined && !slot.deleted) {
-        this.set(slot.key, slot.value); // this process adds the length back
+      if (slot !== undefined) {
+        this.set(slot); // this process adds the length back
       }
     }
   }
 }
+
+HashMap.MAX_LOAD_RATIO = 0.9;
+HashMap.SIZE_RATIO = 3;
+
 function main() {
-  const lor = new HashMap(8);
+  const lor = new HashMap(4);
   lor.set('Hobbit', 'Bilbo');
   lor.set('Hobbit', 'Frodo');
   lor.set('Wizard', 'Gandolf');
@@ -289,8 +289,8 @@ function main() {
   lor.set('LadyofLight', 'Galadriel');
   lor.set('HalfElven', 'Arwen');
   lor.set('Ent', 'Treebeard');
-  console.log(lor.get('LadyofLight'));
-  // console.log(JSON.stringify(lor, null, 2));
+  // console.log(lor.get('LadyofLight'));
+  console.log(JSON.stringify(lor, null, 2));
 }
 
 main();
