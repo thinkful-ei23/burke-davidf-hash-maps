@@ -190,7 +190,18 @@ class HashMap {
     if (this._slots[index] === undefined) {
       throw new Error('Key error');
     }
-    return this._slots[index].value;
+    let currentNode = this._slots[index].head;
+    if (currentNode !== null && currentNode.value.key === key) {
+      return currentNode;
+    }
+    while (currentNode.next !== null) {
+      if (currentNode.next.value.key === key) {
+        return currentNode.next;
+      }
+      currentNode = currentNode.next;
+    }
+
+    throw new Error('key error');
   }
 
   set(key, value) {
@@ -203,7 +214,6 @@ class HashMap {
     const index = this._findSlot(key);
 
     if (this._slots[index]) {
-      console.log(this._slots[index].head.value.key);
       if (this._slots[index].head.value.key === key) {
         this.remove(key);
         this._slots[index].insertFirst({key, value});
@@ -230,8 +240,11 @@ class HashMap {
       throw new Error('Key error');
     }
     let currentNode = this._slots[index].head;
-    console.log(currentNode.value.key);
-    console.log(key);
+
+    if (currentNode.next === null && currentNode.value.key === key) {
+      this._slots[index].deleteItem(currentNode.value);
+    }
+
     while (currentNode.next !== null) {
       if (currentNode.value.key === key) {
         console.log('deleting');
@@ -239,6 +252,7 @@ class HashMap {
       }
       currentNode = currentNode.next;
     }
+
     this.length--;
   }
 
@@ -275,7 +289,8 @@ function main() {
   lor.set('LadyofLight', 'Galadriel');
   lor.set('HalfElven', 'Arwen');
   lor.set('Ent', 'Treebeard');
-  console.log(JSON.stringify(lor, null, 2));
+  console.log(lor.get('LadyofLight'));
+  // console.log(JSON.stringify(lor, null, 2));
 }
 
 main();
