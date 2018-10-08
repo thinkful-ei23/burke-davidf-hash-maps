@@ -203,7 +203,13 @@ class HashMap {
     const index = this._findSlot(key);
 
     if (this._slots[index]) {
-      this.slots[index].value.insertLast({key, value});
+      console.log(this._slots[index].head.value.key);
+      if (this._slots[index].head.value.key === key) {
+        this.remove(key);
+        this._slots[index].insertFirst({key, value});
+      } else {
+        this._slots[index].insertLast({key, value});
+      }
     } else {
       const newLinkedList = new LinkedList();
       newLinkedList.insertFirst({
@@ -217,28 +223,29 @@ class HashMap {
   }
 
   remove(key) {
+    console.log('in remove');
     const index = this._findSlot(key);
     const slot = this._slots[index];
     if (slot === undefined) {
       throw new Error('Key error');
     }
-    slot.deleted = true;
+    let currentNode = this._slots[index].head;
+    console.log(currentNode.value.key);
+    console.log(key);
+    while (currentNode.next !== null) {
+      if (currentNode.value.key === key) {
+        console.log('deleting');
+        this._slots[index].deleteItem(currentNode.value);
+      }
+      currentNode = currentNode.next;
+    }
     this.length--;
-    this._deleted++;
   }
 
   _findSlot(key) {
     const hash = HashMap._hashString(key);
-    const start = hash % this._capacity; // let's say this gives us 3
-
-    for (let i = start; i < start + this._capacity; i++) {
-      // this goes through the whole array we iterate through 3 to 13
-      const index = i % this._capacity; // if starting at 3. it goes through 3 through 10 and then 0, 1, 2
-      const slot = this._slots[index]; // checks whether it's empty or it matches what we're looking for (used for set and find)
-      if (slot === undefined || (slot.key === key && !slot.deleted)) {
-        return index;
-      }
-    }
+    const index = hash % this._capacity; // let's say this gives us 3
+    return index;
   }
 
   _resize(size) {
@@ -257,9 +264,17 @@ class HashMap {
   }
 }
 function main() {
-  const lor = new HashMap(3);
+  const lor = new HashMap(8);
   lor.set('Hobbit', 'Bilbo');
+  lor.set('Hobbit', 'Frodo');
+  lor.set('Wizard', 'Gandolf');
+  lor.set('Human', 'Aragorn');
+  lor.set('Maiar', 'Necromancer');
   lor.set('Maiar', 'Sauron');
+  lor.set('Ringbearer', 'Gollum');
+  lor.set('LadyofLight', 'Galadriel');
+  lor.set('HalfElven', 'Arwen');
+  lor.set('Ent', 'Treebeard');
   console.log(JSON.stringify(lor, null, 2));
 }
 
