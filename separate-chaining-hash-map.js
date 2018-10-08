@@ -201,11 +201,18 @@ class HashMap {
     }
     // then find a slot for the key
     const index = this._findSlot(key);
-    this._slots[index] = {
-      key,
-      value,
-      deleted: false
-    };
+
+    if (this._slots[index]) {
+      this.slots[index].value.insertLast({key, value});
+    } else {
+      const newLinkedList = new LinkedList();
+      newLinkedList.insertFirst({
+        key,
+        value,
+      });
+      this._slots[index] = newLinkedList;
+    }
+    // does length need to change?
     this.length++;
   }
 
@@ -249,3 +256,11 @@ class HashMap {
     }
   }
 }
+function main() {
+  const lor = new HashMap(3);
+  lor.set('Hobbit', 'Bilbo');
+  lor.set('Maiar', 'Sauron');
+  console.log(JSON.stringify(lor, null, 2));
+}
+
+main();
